@@ -1,0 +1,14 @@
+jsam/.gradle
+jsam/build/
+
+# Ignore Gradle GUI config
+jsam/gradle-app.setting
+
+# Avoid ignoring Gradle wrapper jar file (.jar files are usually ignored)
+!jsam/gradle-wrapper.jar
+
+# Cache of project
+jsam/.gradletasknamecache
+
+# # Work around https://youtrack.jetbrains.com/issue/IDEA-116898
+# gradle/wrapper/gradle-wrapper.properties
