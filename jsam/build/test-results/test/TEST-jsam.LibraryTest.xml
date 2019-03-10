@@ -1,9 +1,0 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<testsuite name="jsam.LibraryTest" tests="3" skipped="0" failures="0" errors="0" timestamp="2019-03-10T04:27:22" hostname="idk" time="0.052">
-  <properties/>
-  <testcase name="testSomeLibraryMethod" classname="jsam.LibraryTest" time="0.017"/>
-  <testcase name="testValidDefaultSignatureType" classname="jsam.LibraryTest" time="0.002"/>
-  <testcase name="testValidDefaultSAMAddress" classname="jsam.LibraryTest" time="0.029"/>
-  <system-out><![CDATA[]]></system-out>
-  <system-err><![CDATA[]]></system-err>
-</testsuite>
