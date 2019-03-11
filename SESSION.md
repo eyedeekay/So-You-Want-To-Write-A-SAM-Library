@@ -7,8 +7,11 @@ command to the SAM Bridge. To do that, we'll use a CreateSession function that
 accepts a session ID and a destination type parameter.
 
 ``` Java
-    public String ConnectSession(String id, String destination) {
-        Reply repl = CommandSAM("STREAM CONNECT ID=" + id + " DESTINATION=" + destination);
+    public String CreateSession(String id, String destination ) {
+        if (destination == "") {
+            destination = "TRANSIENT";
+        }
+        Reply repl = CommandSAM("SESSION CREATE STYLE=STREAM ID=" + ID + " DESTINATION=" + destination);
         if (repl.result == Reply.REPLY_TYPES.OK) {
             System.out.println(repl.String());
             return id;

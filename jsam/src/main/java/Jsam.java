@@ -92,6 +92,9 @@ public class Jsam {
         System.out.println(repl.String());
         return "";
     }
+    public String ConnectSession(String destination) {
+        return ConnectSession(
+    }
     public String ConnectSession(String id, String destination) {
         Reply repl = CommandSAM("STREAM CONNECT ID=" + id + " DESTINATION=" + destination);
         if (repl.result == Reply.REPLY_TYPES.OK) {
