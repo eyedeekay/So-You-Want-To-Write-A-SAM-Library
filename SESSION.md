@@ -13,10 +13,8 @@ accepts a session ID and a destination type parameter.
         }
         Reply repl = CommandSAM("SESSION CREATE STYLE=STREAM ID=" + ID + " DESTINATION=" + destination);
         if (repl.result == Reply.REPLY_TYPES.OK) {
-            System.out.println(repl.String());
             return id;
         }
-        System.out.println(repl.String());
         return "";
     }
 ```
@@ -39,6 +37,15 @@ function works by writing a test for it:
 Note that in this test, we *must* call HelloSAM first to establish communication
 with SAM before starting our session. If not, the bridge will reply with an
 error and the test will fail.
+
+### Looking up Hosts by name or .b32
+
+Now you have your session established and your local destination, and need to
+decide what you want to do with them. Your session can now be commanded to
+connect to a remote service over I2P, or to wait for incoming connections to
+respond to. However, before you can connect to a remote destination, you may
+need to obtain the base64 of the destination, which is what the API expects.
+
 
 ### Sending and Recieving Information
 

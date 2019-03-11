@@ -11,10 +11,20 @@ public class LibraryTest {
         Jsam classUnderTest = new Jsam();
         assertTrue("HelloSAM should return 'true' in the presence of an alive SAM bridge", classUnderTest.HelloSAM());
     }
-    @Test public void testCreateSession() {
+    /*@Test public void testCreateSession() {
         Jsam classUnderTest = new Jsam();
         assertTrue("HelloSAM should return 'true' in the presence of an alive SAM bridge", classUnderTest.HelloSAM());
         assertEquals("test", classUnderTest.CreateSession("test", ""));
+    }*/
+    @Test public void testLookupName() {
+        Jsam classUnderTest = new Jsam();
+        assertTrue("HelloSAM should return 'true' in the presence of an alive SAM bridge", classUnderTest.HelloSAM());
+    }
+    @Test public void testConnectSession() {
+        Jsam classUnderTest = new Jsam();
+        assertTrue("HelloSAM should return 'true' in the presence of an alive SAM bridge", classUnderTest.HelloSAM());
+        assertEquals("test", classUnderTest.CreateSession("test", ""));
+        //assertEquals("test", classUnderTest.ConnectSession("test", "i2p-projekt.i2p"));
     }
     @Test public void testValidDefaultSAMAddress() {
         Jsam classUnderTest = new Jsam();

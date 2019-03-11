@@ -8,7 +8,7 @@ import java.util.Arrays;
 public class Reply {
     String topic;
     String type;
-    REPLY_TYPES result;
+    REPLY_TYPES result = REPLY_TYPES.I2P_ERROR;
     Map<String, String> replyMap = new HashMap<String, String>();
     enum REPLY_TYPES {
         OK,
@@ -71,8 +71,11 @@ public class Reply {
     public Reply(String reply) {
         String trimmed = reply.trim();
         String[] replyvalues = reply.split(" ");
-        if (replyvalues.length < 3) {
+        if (replyvalues.length <= 3) {
             //TODO: handle malformed reply here
+            //return
+            System.out.println(reply);
+            return;
         }
         topic = replyvalues[0];
         type = replyvalues[1];
