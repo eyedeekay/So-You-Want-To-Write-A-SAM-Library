@@ -44,7 +44,16 @@ Now you have your session established and your local destination, and need to
 decide what you want to do with them. Your session can now be commanded to
 connect to a remote service over I2P, or to wait for incoming connections to
 respond to. However, before you can connect to a remote destination, you may
-need to obtain the base64 of the destination, which is what the API expects.
+need to obtain the base64 of the destination, which is what the API expects. In
+order to do this, we'll create a LookupName function, which will return the
+base64 in a usable form.
+
+``` Java
+```
+
+
+``` Java
+```
 
 
 ### Sending and Recieving Information

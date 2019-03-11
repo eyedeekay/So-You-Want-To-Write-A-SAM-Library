@@ -223,18 +223,12 @@
 <a class="sourceLine" id="cb1-2" title="2">        <span class="kw">if</span> (destination == <span class="st">&quot;&quot;</span>) {</a>
 <a class="sourceLine" id="cb1-3" title="3">            destination = <span class="st">&quot;TRANSIENT&quot;</span>;</a>
 <a class="sourceLine" id="cb1-4" title="4">        }</a>
-<a class="sourceLine" id="cb1-5" title="5">        <span class="kw">if</span> (id == <span class="st">&quot;&quot;</span>) {</a>
-<a class="sourceLine" id="cb1-6" title="6">            id = <span class="fu">generateID</span>();</a>
-<a class="sourceLine" id="cb1-7" title="7">        }</a>
-<a class="sourceLine" id="cb1-8" title="8">        ID = id;</a>
-<a class="sourceLine" id="cb1-9" title="9">        Reply repl = <span class="fu">CommandSAM</span>(<span class="st">&quot;SESSION CREATE STYLE=STREAM ID=&quot;</span> + ID + <span class="st">&quot; DESTINATION=&quot;</span> + destination);</a>
-<a class="sourceLine" id="cb1-10" title="10">        <span class="kw">if</span> (repl.<span class="fu">result</span> == Reply.<span class="fu">REPLY_TYPES</span>.<span class="fu">OK</span>) {</a>
-<a class="sourceLine" id="cb1-11" title="11">            <span class="bu">System</span>.<span class="fu">out</span>.<span class="fu">println</span>(repl.<span class="fu">String</span>());</a>
-<a class="sourceLine" id="cb1-12" title="12">            <span class="kw">return</span> id;</a>
-<a class="sourceLine" id="cb1-13" title="13">        }</a>
-<a class="sourceLine" id="cb1-14" title="14">        <span class="bu">System</span>.<span class="fu">out</span>.<span class="fu">println</span>(repl.<span class="fu">String</span>());</a>
-<a class="sourceLine" id="cb1-15" title="15">        <span class="kw">return</span> <span class="st">&quot;&quot;</span>;</a>
-<a class="sourceLine" id="cb1-16" title="16">    }</a></code></pre></div>
+<a class="sourceLine" id="cb1-5" title="5">        Reply repl = <span class="fu">CommandSAM</span>(<span class="st">&quot;SESSION CREATE STYLE=STREAM ID=&quot;</span> + ID + <span class="st">&quot; DESTINATION=&quot;</span> + destination);</a>
+<a class="sourceLine" id="cb1-6" title="6">        <span class="kw">if</span> (repl.<span class="fu">result</span> == Reply.<span class="fu">REPLY_TYPES</span>.<span class="fu">OK</span>) {</a>
+<a class="sourceLine" id="cb1-7" title="7">            <span class="kw">return</span> id;</a>
+<a class="sourceLine" id="cb1-8" title="8">        }</a>
+<a class="sourceLine" id="cb1-9" title="9">        <span class="kw">return</span> <span class="st">&quot;&quot;</span>;</a>
+<a class="sourceLine" id="cb1-10" title="10">    }</a></code></pre></div>
 <p>That was easy, right? All we had to do was adapt the pattern we used in our HelloSAM function to the <code>SESSION CREATE</code> command. A good reply from the bridge will still return OK, and in that case we return the ID of the newly created SAM connection. Otherwise, we return an empty string because that's an invalid ID anyway and it failed, so it's easy to check. Let's see if this function works by writing a test for it:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode Java"><code class="sourceCode java"><a class="sourceLine" id="cb2-1" title="1">    <span class="at">@Test</span> <span class="kw">public</span> <span class="dt">void</span> <span class="fu">testCreateSession</span>() {</a>
 <a class="sourceLine" id="cb2-2" title="2">        Jsam classUnderTest = <span class="kw">new</span> <span class="fu">Jsam</span>();</a>
@@ -242,5 +236,9 @@
 <a class="sourceLine" id="cb2-4" title="4">        <span class="fu">assertEquals</span>(<span class="st">&quot;test&quot;</span>, classUnderTest.<span class="fu">CreateSession</span>(<span class="st">&quot;test&quot;</span>, <span class="st">&quot;&quot;</span>));</a>
 <a class="sourceLine" id="cb2-5" title="5">    }</a></code></pre></div>
 <p>Note that in this test, we <em>must</em> call HelloSAM first to establish communication with SAM before starting our session. If not, the bridge will reply with an error and the test will fail.</p>
+<h3 id="looking-up-hosts-by-name-or-b32">Looking up Hosts by name or .b32</h3>
+<p>Now you have your session established and your local destination, and need to decide what you want to do with them. Your session can now be commanded to connect to a remote service over I2P, or to wait for incoming connections to respond to. However, before you can connect to a remote destination, you may need to obtain the base64 of the destination, which is what the API expects. In order to do this, we'll create a LookupName function, which will return the base64 in a usable form.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode Java"><code class="sourceCode java"></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode Java"><code class="sourceCode java"></code></pre></div>
 <h3 id="sending-and-recieving-information">Sending and Recieving Information</h3>
 

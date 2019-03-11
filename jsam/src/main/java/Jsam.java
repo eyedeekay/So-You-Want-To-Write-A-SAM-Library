@@ -105,6 +105,15 @@ public class Jsam extends Socket {
         System.out.println(repl.String());
         return "";
     }
+    public String LookupName(String name) {
+        String cmd = "NAMING LOOKUP NAME=" + name + "\n";
+        Reply repl = CommandSAM(cmd);
+        if (repl.result == Reply.REPLY_TYPES.OK) {
+            System.out.println(repl.replyMap.get("VALUE"));
+            return repl.replyMap.get("VALUE");
+        }
+        return "";
+    }
     public Reply CommandSAM(String args) {
         System.out.println(args);
         writer.println(args + "\n");

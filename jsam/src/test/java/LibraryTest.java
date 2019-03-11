@@ -11,20 +11,21 @@ public class LibraryTest {
         Jsam classUnderTest = new Jsam();
         assertTrue("HelloSAM should return 'true' in the presence of an alive SAM bridge", classUnderTest.HelloSAM());
     }
-    /*@Test public void testCreateSession() {
+    @Test public void testCreateSession() {
         Jsam classUnderTest = new Jsam();
         assertTrue("HelloSAM should return 'true' in the presence of an alive SAM bridge", classUnderTest.HelloSAM());
         assertEquals("test", classUnderTest.CreateSession("test", ""));
-    }*/
+    }
     @Test public void testLookupName() {
         Jsam classUnderTest = new Jsam();
         assertTrue("HelloSAM should return 'true' in the presence of an alive SAM bridge", classUnderTest.HelloSAM());
+        assertEquals("8ZAW~KzGFMUEj0pdchy6GQOOZbuzbqpWtiApEj8LHy2~O~58XKxRrA43cA23a9oDpNZDqWhRWEtehSnX5NoCwJcXWWdO1ksKEUim6cQLP-VpQyuZTIIqwSADwgoe6ikxZG0NGvy5FijgxF4EW9zg39nhUNKRejYNHhOBZKIX38qYyXoB8XCVJybKg89aMMPsCT884F0CLBKbHeYhpYGmhE4YW~aV21c5pebivvxeJPWuTBAOmYxAIgJE3fFU-fucQn9YyGUFa8F3t-0Vco-9qVNSEWfgrdXOdKT6orr3sfssiKo3ybRWdTpxycZ6wB4qHWgTSU5A-gOA3ACTCMZBsASN3W5cz6GRZCspQ0HNu~R~nJ8V06Mmw~iVYOu5lDvipmG6-dJky6XRxCedczxMM1GWFoieQ8Ysfuxq-j8keEtaYmyUQme6TcviCEvQsxyVirr~dTC-F8aZ~y2AlG5IJz5KD02nO6TRkI2fgjHhv9OZ9nskh-I2jxAzFP6Is1kyAAAA", classUnderTest.LookupName("i2p-projekt.i2p"));
     }
     @Test public void testConnectSession() {
         Jsam classUnderTest = new Jsam();
         assertTrue("HelloSAM should return 'true' in the presence of an alive SAM bridge", classUnderTest.HelloSAM());
-        assertEquals("test", classUnderTest.CreateSession("test", ""));
-        //assertEquals("test", classUnderTest.ConnectSession("test", "i2p-projekt.i2p"));
+        assertEquals("test-2", classUnderTest.CreateSession("test-2", ""));
+        //assertEquals("test", classUnderTest.ConnectSession("test-2", "i2p-projekt.i2p"));
     }
     @Test public void testValidDefaultSAMAddress() {
         Jsam classUnderTest = new Jsam();
