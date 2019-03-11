@@ -12,7 +12,6 @@ public class Jsam extends Socket {
     public String SAMHost = "127.0.0.1";
     public int SAMPort = 7656;
     private String ID = "";
-    private Socket socket;
     private PrintWriter writer;
     private BufferedReader reader;
     private static final String ALPHABET = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_";
@@ -37,8 +36,8 @@ public class Jsam extends Socket {
     public void startConnection() {
         try {
             this.connect(new InetSocketAddress(SAMHost, SAMPort));
-            writer = new PrintWriter(socket.getOutputStream(), true);
-            reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            writer = new PrintWriter(this.getOutputStream(), true);
+            reader = new BufferedReader(new InputStreamReader(this.getInputStream()));
         } catch (Exception e) {
 
         }
