@@ -1,5 +1,5 @@
 <h1 id="so-you-want-to-write-a-sam-library">So You Want To Write A SAM Library</h1>
-<p>One of the best features of I2P, in my opinion, is it’s SAM API, which can be used to build a bridge between I2P and your application or language of choice. Currently, dozens of SAM libraries exist for a variety of languages, including:</p>
+<p>One of the best features of I2P, in my opinion, is it's SAM API, which can be used to build a bridge between I2P and your application or language of choice. Currently, dozens of SAM libraries exist for a variety of languages, including:</p>
 <ul>
 <li><a href="https://github.com/i2p/i2psam">i2psam, for c++</a></li>
 <li><a href="https://github.com/i2p/libsam3">libsam3, for C</a></li>
@@ -15,9 +15,9 @@
 <li><a href="https://github.com/stallmanifold/rust-i2p">rust-i2p</a></li>
 <li><a href="https://github.com/dryruby/i2p.rb">and i2p.rb for ruby</a></li>
 </ul>
-<p>If you’re using any of these languages, you may be able to port your application to I2P already, using an existing library. That’s not what this tutorial is about, though. This tutorial is about what to do if you want to create a SAM library in a new language. In this tutorial, I will implement a new SAM library in Java. I chose Java because there isn’t a Java library that connects you to SAM yet, because of Java’s use in Android, and because it’s a language almost everybody has at least a <em>little</em> experience with, so hopefully you can translate it into a language of your choice.</p>
+<p>If you're using any of these languages, you may be able to port your application to I2P already, using an existing library. That's not what this tutorial is about, though. This tutorial is about what to do if you want to create a SAM library in a new language. In this tutorial, I will implement a new SAM library in Java. I chose Java because there isn't a Java library that connects you to SAM yet, because of Java's use in Android, and because it's a language almost everybody has at least a <em>little</em> experience with, so hopefully you can translate it into a language of your choice.</p>
 <h2 id="creating-your-library">Creating your library</h2>
-<p>How you set up your own library will vary depending on the language you wish to use. For this example library, we’ll be using java so we can create a library like this:</p>
+<p>How you set up your own library will vary depending on the language you wish to use. For this example library, we'll be using java so we can create a library like this:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode sh"><code class="sourceCode bash"><a class="sourceLine" id="cb1-1" title="1"><span class="fu">mkdir</span> jsam</a>
 <a class="sourceLine" id="cb1-2" title="2"><span class="bu">cd</span> jsam</a>
 <a class="sourceLine" id="cb1-3" title="3"><span class="ex">gradle</span> init --type java-library</a></code></pre></div>
@@ -27,14 +27,14 @@
 <p>There are a few pieces of data that almost any SAM library should probably manage. It will at least need to store the address of the SAM Bridge you intend to use and the signature type you wish to use.</p>
 <h3 id="storing-the-sam-address">Storing the SAM address</h3>
 <p>I prefer to store the SAM address as a String and an Integer, and re-combine them in a function at runtime.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode java"><code class="sourceCode java"><a class="sourceLine" id="cb1-1" title="1">    <span class="kw">public</span> <span class="bu">String</span> SAMHost = <span class="st">&quot;127.0.0.1&quot;</span>;</a>
+<div class="sourceCode" id="cb1"><pre class="sourceCode Java"><code class="sourceCode java"><a class="sourceLine" id="cb1-1" title="1">    <span class="kw">public</span> <span class="bu">String</span> SAMHost = <span class="st">&quot;127.0.0.1&quot;</span>;</a>
 <a class="sourceLine" id="cb1-2" title="2">    <span class="kw">public</span> <span class="dt">int</span> SAMPort = <span class="st">&quot;7656&quot;</span>;</a>
 <a class="sourceLine" id="cb1-3" title="3">    <span class="kw">public</span> <span class="bu">String</span> <span class="fu">SAMAddress</span>(){</a>
 <a class="sourceLine" id="cb1-4" title="4">        <span class="kw">return</span> SAMHost + <span class="st">&quot;:&quot;</span> + SAMPort;</a>
 <a class="sourceLine" id="cb1-5" title="5">    }</a></code></pre></div>
 <h3 id="storing-the-signature-type">Storing the Signature Type</h3>
-<p>The valid signature types for an I2P Tunnel are DSA_SHA1, ECDSA_SHA256_P256, ECDSA_SHA384_P384, ECDSA_SHA512_P521, EdDSA_SHA512_Ed25519, but it is strongly recommended that you use EdDSA_SHA512_Ed25519 as a default if you implement at least SAM 3.1. In Java, the ‘enum’ datastructure lends itself to this task, as it is intended to contain a group of constants. Add the enum, and an instance of the enum, to your Java class definition.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode java"><code class="sourceCode java"><a class="sourceLine" id="cb2-1" title="1">    <span class="kw">enum</span> SIGNATURE_TYPE {</a>
+<p>The valid signature types for an I2P Tunnel are DSA_SHA1, ECDSA_SHA256_P256, ECDSA_SHA384_P384, ECDSA_SHA512_P521, EdDSA_SHA512_Ed25519, but it is strongly recommended that you use EdDSA_SHA512_Ed25519 as a default if you implement at least SAM 3.1. In Java, the 'enum' datastructure lends itself to this task, as it is intended to contain a group of constants. Add the enum, and an instance of the enum, to your Java class definition.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode Java"><code class="sourceCode java"><a class="sourceLine" id="cb2-1" title="1">    <span class="kw">enum</span> SIGNATURE_TYPE {</a>
 <a class="sourceLine" id="cb2-2" title="2">        DSA_SHA1,</a>
 <a class="sourceLine" id="cb2-3" title="3">        ECDSA_SHA256_P256,</a>
 <a class="sourceLine" id="cb2-4" title="4">        ECDSA_SHA384_P384,</a>
@@ -43,8 +43,8 @@
 <a class="sourceLine" id="cb2-7" title="7">    }</a>
 <a class="sourceLine" id="cb2-8" title="8">    <span class="kw">public</span> SIGNATURE_TYPE SigType = SIGNATURE_TYPE.<span class="fu">EdDSA_SHA512_Ed25519</span>;</a></code></pre></div>
 <h3 id="retrieving-the-signature-type">Retrieving the signature type:</h3>
-<p>That takes care of reliably storing the signature type in use by the SAM connection, but you’ve still got to retrieve it as a string to communicate it to the bridge.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode java"><code class="sourceCode java"><a class="sourceLine" id="cb3-1" title="1">    <span class="kw">public</span> <span class="bu">String</span> <span class="fu">SignatureType</span>() {</a>
+<p>That takes care of reliably storing the signature type in use by the SAM connection, but you've still got to retrieve it as a string to communicate it to the bridge.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode Java"><code class="sourceCode java"><a class="sourceLine" id="cb3-1" title="1">    <span class="kw">public</span> <span class="bu">String</span> <span class="fu">SignatureType</span>() {</a>
 <a class="sourceLine" id="cb3-2" title="2">        <span class="kw">switch</span> (SigType) {</a>
 <a class="sourceLine" id="cb3-3" title="3">            <span class="kw">case</span> DSA_SHA1:</a>
 <a class="sourceLine" id="cb3-4" title="4">                <span class="kw">return</span> <span class="st">&quot;SIGNATURE_TYPE=DSA_SHA1&quot;</span>;</a>
@@ -59,8 +59,8 @@
 <a class="sourceLine" id="cb3-13" title="13">        }</a>
 <a class="sourceLine" id="cb3-14" title="14">        <span class="kw">return</span> <span class="st">&quot;&quot;</span>;</a>
 <a class="sourceLine" id="cb3-15" title="15">    }</a></code></pre></div>
-<p>It’s important to test things, so let’s write some tests:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode java"><code class="sourceCode java"><a class="sourceLine" id="cb4-1" title="1">    <span class="at">@Test</span> <span class="kw">public</span> <span class="dt">void</span> <span class="fu">testValidDefaultSAMAddress</span>() {</a>
+<p>It's important to test things, so let's write some tests:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode Java"><code class="sourceCode java"><a class="sourceLine" id="cb4-1" title="1">    <span class="at">@Test</span> <span class="kw">public</span> <span class="dt">void</span> <span class="fu">testValidDefaultSAMAddress</span>() {</a>
 <a class="sourceLine" id="cb4-2" title="2">        Jsam classUnderTest = <span class="kw">new</span> <span class="fu">Jsam</span>();</a>
 <a class="sourceLine" id="cb4-3" title="3">        <span class="fu">assertEquals</span>(<span class="st">&quot;127.0.0.1:7656&quot;</span>, classUnderTest.<span class="fu">SAMAddress</span>());</a>
 <a class="sourceLine" id="cb4-4" title="4">    }</a>
@@ -68,21 +68,21 @@
 <a class="sourceLine" id="cb4-6" title="6">        Jsam classUnderTest = <span class="kw">new</span> <span class="fu">Jsam</span>();</a>
 <a class="sourceLine" id="cb4-7" title="7">        <span class="fu">assertEquals</span>(<span class="st">&quot;EdDSA_SHA512_Ed25519&quot;</span>, classUnderTest.<span class="fu">SignatureType</span>());</a>
 <a class="sourceLine" id="cb4-8" title="8">    }</a></code></pre></div>
-<p>Once that’s done, begin creating your constructor. Note that we’ve given our library defaults which will be useful in default situations on all existing I2P routers so far.</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode java"><code class="sourceCode java"><a class="sourceLine" id="cb5-1" title="1">    <span class="kw">public</span> <span class="fu">Jsam</span>(<span class="bu">String</span> host, <span class="dt">int</span> port, SIGNATURE_TYPE sig) {</a>
+<p>Once that's done, begin creating your constructor. Note that we've given our library defaults which will be useful in default situations on all existing I2P routers so far.</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode Java"><code class="sourceCode java"><a class="sourceLine" id="cb5-1" title="1">    <span class="kw">public</span> <span class="fu">Jsam</span>(<span class="bu">String</span> host, <span class="dt">int</span> port, SIGNATURE_TYPE sig) {</a>
 <a class="sourceLine" id="cb5-2" title="2">        SAMHost = host;</a>
 <a class="sourceLine" id="cb5-3" title="3">        SAMPort = port;</a>
 <a class="sourceLine" id="cb5-4" title="4">        SigType = sig;</a>
 <a class="sourceLine" id="cb5-5" title="5">    }</a></code></pre></div>
 <h2 id="establishing-a-sam-connection">Establishing a SAM Connection</h2>
-<p>Finally, the good part. Interaction with the SAM bridge is done by sending a “command” to the address of the SAM bridge, and you can parse the result of the command as a set of string-based key-value pairs. So bearing that in mind, let’s estabish a read-write connection to the SAM Address we defined before, then write a “CommandSAM” Function and a reply parser.</p>
+<p>Finally, the good part. Interaction with the SAM bridge is done by sending a &quot;command&quot; to the address of the SAM bridge, and you can parse the result of the command as a set of string-based key-value pairs. So bearing that in mind, let's estabish a read-write connection to the SAM Address we defined before, then write a &quot;CommandSAM&quot; Function and a reply parser.</p>
 <h3 id="connecting-to-the-sam-port">Connecting to the SAM Port</h3>
-<p>We’re communicating with SAM via a Socket, so in order to connect to, read from, and write to the socket, you’ll need to create the following private variables in the Jsam class:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode java"><code class="sourceCode java"><a class="sourceLine" id="cb6-1" title="1">    <span class="kw">private</span> <span class="bu">Socket</span> socket;</a>
+<p>We're communicating with SAM via a Socket, so in order to connect to, read from, and write to the socket, you'll need to create the following private variables in the Jsam class:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode Java"><code class="sourceCode java"><a class="sourceLine" id="cb6-1" title="1">    <span class="kw">private</span> <span class="bu">Socket</span> socket;</a>
 <a class="sourceLine" id="cb6-2" title="2">    <span class="kw">private</span> <span class="bu">PrintWriter</span> writer;</a>
 <a class="sourceLine" id="cb6-3" title="3">    <span class="kw">private</span> <span class="bu">BufferedReader</span> reader;</a></code></pre></div>
 <p>You will also want to instantiate those variables in your Constructors by creating a function to do so.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode java"><code class="sourceCode java"><a class="sourceLine" id="cb7-1" title="1">    <span class="kw">public</span> <span class="fu">Jsam</span>(<span class="bu">String</span> host, <span class="dt">int</span> port, SIGNATURE_TYPE sig) {</a>
+<div class="sourceCode" id="cb7"><pre class="sourceCode Java"><code class="sourceCode java"><a class="sourceLine" id="cb7-1" title="1">    <span class="kw">public</span> <span class="fu">Jsam</span>(<span class="bu">String</span> host, <span class="dt">int</span> port, SIGNATURE_TYPE sig) {</a>
 <a class="sourceLine" id="cb7-2" title="2">        SAMHost = host;</a>
 <a class="sourceLine" id="cb7-3" title="3">        SAMPort = port;</a>
 <a class="sourceLine" id="cb7-4" title="4">        SigType = sig;</a>
@@ -98,8 +98,8 @@
 <a class="sourceLine" id="cb7-14" title="14">        }</a>
 <a class="sourceLine" id="cb7-15" title="15">    }</a></code></pre></div>
 <h3 id="sending-a-command-to-sam">Sending a Command to SAM</h3>
-<p>Now you’re all set up to finally start talking to SAM. In order to keep things nicely organized, let’s create a function which sends a single command to SAM, terminated by a newline, and which returns a Reply object, which we will create in the next step:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode java"><code class="sourceCode java"><a class="sourceLine" id="cb8-1" title="1">    <span class="kw">public</span> Reply <span class="fu">CommandSAM</span>(<span class="bu">String</span> args) {</a>
+<p>Now you're all set up to finally start talking to SAM. In order to keep things nicely organized, let's create a function which sends a single command to SAM, terminated by a newline, and which returns a Reply object, which we will create in the next step:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode Java"><code class="sourceCode java"><a class="sourceLine" id="cb8-1" title="1">    <span class="kw">public</span> Reply <span class="fu">CommandSAM</span>(<span class="bu">String</span> args) {</a>
 <a class="sourceLine" id="cb8-2" title="2">        writer.<span class="fu">println</span>(args + <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>);</a>
 <a class="sourceLine" id="cb8-3" title="3">        <span class="kw">try</span> {</a>
 <a class="sourceLine" id="cb8-4" title="4">            <span class="bu">String</span> repl = reader.<span class="fu">readLine</span>();</a>
@@ -109,15 +109,15 @@
 <a class="sourceLine" id="cb8-8" title="8">        }</a>
 <a class="sourceLine" id="cb8-9" title="9">    }</a></code></pre></div>
 <p>Note that we are using the writer and reader we created from the socket in the previous step as our inputs and outputs to the socket. When we get a reply from the reader, we pass the string to the Reply constructor, which parses it and returns the Reply object.</p>
-<h3 id="parsing-a-reply-and-creating-a-reply-object.">Parsing a reply and creating a Reply object.</h3>
-<p>In order to more easily handle replies, we’ll use a Reply object to automatically parse the results we get from the SAM bridge. A reply has at least a topic, a type, and a result, as well as an arbitrary number of key-value pairs.</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode java"><code class="sourceCode java"><a class="sourceLine" id="cb9-1" title="1"><span class="kw">public</span> <span class="kw">class</span> Reply {</a>
+<h3 id="parsing-a-reply-and-creating-a-reply-object">Parsing a reply and creating a Reply object.</h3>
+<p>In order to more easily handle replies, we'll use a Reply object to automatically parse the results we get from the SAM bridge. A reply has at least a topic, a type, and a result, as well as an arbitrary number of key-value pairs.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode Java"><code class="sourceCode java"><a class="sourceLine" id="cb9-1" title="1"><span class="kw">public</span> <span class="kw">class</span> Reply {</a>
 <a class="sourceLine" id="cb9-2" title="2">    <span class="bu">String</span> topic;</a>
 <a class="sourceLine" id="cb9-3" title="3">    <span class="bu">String</span> type;</a>
 <a class="sourceLine" id="cb9-4" title="4">    REPLY_TYPES result;</a>
 <a class="sourceLine" id="cb9-5" title="5">    <span class="bu">Map</span>&lt;<span class="bu">String</span>, <span class="bu">String</span>&gt; replyMap = <span class="kw">new</span> <span class="bu">HashMap</span>&lt;<span class="bu">String</span>, <span class="bu">String</span>&gt;();</a></code></pre></div>
-<p>As you can see, we will be storing the “result” as an enum, REPLY_TYPES. This enum contains all the possible reply results which the SAM bridge might respond with.</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode java"><code class="sourceCode java"><a class="sourceLine" id="cb10-1" title="1">    <span class="kw">enum</span> REPLY_TYPES {</a>
+<p>As you can see, we will be storing the &quot;result&quot; as an enum, REPLY_TYPES. This enum contains all the possible reply results which the SAM bridge might respond with.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode Java"><code class="sourceCode java"><a class="sourceLine" id="cb10-1" title="1">    <span class="kw">enum</span> REPLY_TYPES {</a>
 <a class="sourceLine" id="cb10-2" title="2">        OK,</a>
 <a class="sourceLine" id="cb10-3" title="3">        CANT_REACH_PEER,</a>
 <a class="sourceLine" id="cb10-4" title="4">        DUPLICATED_ID,</a>
@@ -175,8 +175,8 @@
 <a class="sourceLine" id="cb10-56" title="56">            <span class="kw">return</span> <span class="st">&quot;RESULT=I2P_ERROR&quot;</span>;</a>
 <a class="sourceLine" id="cb10-57" title="57">        }</a>
 <a class="sourceLine" id="cb10-58" title="58">    };</a></code></pre></div>
-<p>Now let’s create our constructor, which takes the reply string recieved from the socket as a parameter, parses it, and uses the information to set up the reply object. The reply is space-delimited, with key-value pairs joined by an equal sign and terminated by a newline.</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode java"><code class="sourceCode java"><a class="sourceLine" id="cb11-1" title="1">    <span class="kw">public</span> <span class="fu">Reply</span>(<span class="bu">String</span> reply) {</a>
+<p>Now let's create our constructor, which takes the reply string recieved from the socket as a parameter, parses it, and uses the information to set up the reply object. The reply is space-delimited, with key-value pairs joined by an equal sign and terminated by a newline.</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode Java"><code class="sourceCode java"><a class="sourceLine" id="cb11-1" title="1">    <span class="kw">public</span> <span class="fu">Reply</span>(<span class="bu">String</span> reply) {</a>
 <a class="sourceLine" id="cb11-2" title="2">        <span class="bu">String</span> trimmed = reply.<span class="fu">trim</span>();</a>
 <a class="sourceLine" id="cb11-3" title="3">        <span class="bu">String</span>[] replyvalues = reply.<span class="fu">split</span>(<span class="st">&quot; &quot;</span>);</a>
 <a class="sourceLine" id="cb11-4" title="4">        <span class="kw">if</span> (replyvalues.<span class="fu">length</span> &lt; <span class="dv">3</span>) {</a>
@@ -195,14 +195,14 @@
 <a class="sourceLine" id="cb11-17" title="17">            replyMap.<span class="fu">put</span>(kv[<span class="dv">0</span>], kv[<span class="dv">1</span>]);</a>
 <a class="sourceLine" id="cb11-18" title="18">        }</a>
 <a class="sourceLine" id="cb11-19" title="19">    }</a></code></pre></div>
-<p>Lastly, for the sake of convenience, let’s give the reply object a toString() function which returns a string representation of the Reply object.</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode java"><code class="sourceCode java"><a class="sourceLine" id="cb12-1" title="1">    <span class="kw">public</span> <span class="bu">String</span> <span class="fu">toString</span>() {</a>
+<p>Lastly, for the sake of convenience, let's give the reply object a toString() function which returns a string representation of the Reply object.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode Java"><code class="sourceCode java"><a class="sourceLine" id="cb12-1" title="1">    <span class="kw">public</span> <span class="bu">String</span> <span class="fu">toString</span>() {</a>
 <a class="sourceLine" id="cb12-2" title="2">        <span class="kw">return</span> topic + <span class="st">&quot; &quot;</span> + type + <span class="st">&quot; &quot;</span> + REPLY_TYPES.<span class="fu">get</span>(result) + <span class="st">&quot; &quot;</span> + replyMap.<span class="fu">toString</span>();</a>
 <a class="sourceLine" id="cb12-3" title="3">    }</a>
 <a class="sourceLine" id="cb12-4" title="4">}</a></code></pre></div>
-<h3 id="saying-hello-to-sam">Saying “HELLO” to SAM</h3>
-<p>Now we’re ready to establish communication with SAM by sending a “Hello” message. If you’re writing a new SAM library, you should probably target at least SAM 3.1, since it’s available in both I2P and i2pd and introduces support for the SIGNATURE_TYPE parameter.</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode java"><code class="sourceCode java"><a class="sourceLine" id="cb13-1" title="1">    <span class="kw">public</span> <span class="dt">boolean</span> <span class="fu">HelloSAM</span>() {</a>
+<h3 id="saying-hello-to-sam">Saying &quot;HELLO&quot; to SAM</h3>
+<p>Now we're ready to establish communication with SAM by sending a &quot;Hello&quot; message. If you're writing a new SAM library, you should probably target at least SAM 3.1, since it's available in both I2P and i2pd and introduces support for the SIGNATURE_TYPE parameter.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode Java"><code class="sourceCode java"><a class="sourceLine" id="cb13-1" title="1">    <span class="kw">public</span> <span class="dt">boolean</span> <span class="fu">HelloSAM</span>() {</a>
 <a class="sourceLine" id="cb13-2" title="2">        Reply repl = <span class="fu">CommandSAM</span>(<span class="st">&quot;HELLO VERSION MIN=3.0 MAX=3.1 </span><span class="sc">\n</span><span class="st">&quot;</span>);</a>
 <a class="sourceLine" id="cb13-3" title="3">        <span class="kw">if</span> (repl.<span class="fu">result</span> == Reply.<span class="fu">REPLY_TYPES</span>.<span class="fu">OK</span>) {</a>
 <a class="sourceLine" id="cb13-4" title="4">            <span class="kw">return</span> <span class="kw">true</span>;</a>
@@ -211,25 +211,28 @@
 <a class="sourceLine" id="cb13-7" title="7">        <span class="kw">return</span> <span class="kw">false</span>;</a>
 <a class="sourceLine" id="cb13-8" title="8">    }</a></code></pre></div>
 <p>As you can see, we use the CommandSAM function we created before to send the newline-terminated command <code>HELLO VERSION MIN=3.0 MAX=3.1 \n</code>. This tells SAM that you want to start communicating with the API, and that you know how to speak SAM version 3.0 and 3.1. The router, in turn, will respond with like <code>HELLO REPLY RESULT=OK VERSION=3.1</code> which is a string you can pass to the Reply constructor to get a valid Reply object. From now on, we can use our CommandSAM function and Reply object to deal with all our communication across the SAM bridge.</p>
-<p>Finally, let’s add a test for our “HelloSAM” function.</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode java"><code class="sourceCode java"><a class="sourceLine" id="cb14-1" title="1">    <span class="at">@Test</span> <span class="kw">public</span> <span class="dt">void</span> <span class="fu">testHelloSAM</span>() {</a>
+<p>Finally, let's add a test for our &quot;HelloSAM&quot; function.</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode Java"><code class="sourceCode java"><a class="sourceLine" id="cb14-1" title="1">    <span class="at">@Test</span> <span class="kw">public</span> <span class="dt">void</span> <span class="fu">testHelloSAM</span>() {</a>
 <a class="sourceLine" id="cb14-2" title="2">        Jsam classUnderTest = <span class="kw">new</span> <span class="fu">Jsam</span>();</a>
 <a class="sourceLine" id="cb14-3" title="3">        <span class="fu">assertTrue</span>(<span class="st">&quot;HelloSAM should return &#39;true&#39; in the presence of an alive SAM bridge&quot;</span>, classUnderTest.<span class="fu">HelloSAM</span>());</a>
-<a class="sourceLine" id="cb14-4" title="4">    }</a></code></pre></div>
-<h3 id="creating-a-session-for-your-application">Creating a “Session” for your application</h3>
-<p>Now that you’ve negotiated your connection to SAM and agreed on a SAM version you both speak, you can set up peer-to-peer connections for your application to connect to other i2p applications. You do this by sending a “SESSION CREATE” command to the SAM Bridge. To do that, we’ll use a CreateSession function that accepts a session ID and a destination type parameter.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode java"><code class="sourceCode java"><a class="sourceLine" id="cb1-1" title="1">    <span class="kw">public</span> <span class="dt">boolean</span> <span class="fu">CreateSession</span>(<span class="bu">String</span> id, <span class="bu">String</span> destination ){</a>
-<a class="sourceLine" id="cb1-2" title="2">        Reply repl = <span class="fu">CommandSAM</span>(<span class="st">&quot;SESSION CREATE STYLE=STREAM ID=&quot;</span> + id + <span class="st">&quot; DESTINATION=&quot;</span> + destination);</a>
+<a class="sourceLine" id="cb14-4" title="4">    }</a>
+<a class="sourceLine" id="cb14-5" title="5"></a></code></pre></div>
+<h3 id="creating-a-session-for-your-application">Creating a &quot;Session&quot; for your application</h3>
+<p>Now that you've negotiated your connection to SAM and agreed on a SAM version you both speak, you can set up peer-to-peer connections for your application to connect to other i2p applications. You do this by sending a &quot;SESSION CREATE&quot; command to the SAM Bridge. To do that, we'll use a CreateSession function that accepts a session ID and a destination type parameter.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode Java"><code class="sourceCode java"><a class="sourceLine" id="cb1-1" title="1">    <span class="kw">public</span> <span class="bu">String</span> <span class="fu">ConnectSession</span>(<span class="bu">String</span> id, <span class="bu">String</span> destination) {</a>
+<a class="sourceLine" id="cb1-2" title="2">        Reply repl = <span class="fu">CommandSAM</span>(<span class="st">&quot;STREAM CONNECT ID=&quot;</span> + id + <span class="st">&quot; DESTINATION=&quot;</span> + destination);</a>
 <a class="sourceLine" id="cb1-3" title="3">        <span class="kw">if</span> (repl.<span class="fu">result</span> == Reply.<span class="fu">REPLY_TYPES</span>.<span class="fu">OK</span>) {</a>
-<a class="sourceLine" id="cb1-4" title="4">            <span class="kw">return</span> <span class="kw">true</span>;</a>
-<a class="sourceLine" id="cb1-5" title="5">        }</a>
-<a class="sourceLine" id="cb1-6" title="6">        <span class="kw">return</span> <span class="kw">false</span>;</a>
-<a class="sourceLine" id="cb1-7" title="7">    }</a></code></pre></div>
-<p>That was easy, right? All we had to do was adapt the pattern we used in our HelloSAM function to the <code>SESSION CREATE</code> command. A good reply from the bridge will still return OK. Let’s see if this function works by writing a test for it:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode java"><code class="sourceCode java"><a class="sourceLine" id="cb2-1" title="1">    <span class="at">@Test</span> <span class="kw">public</span> <span class="dt">void</span> <span class="fu">testCreateSession</span>() {</a>
+<a class="sourceLine" id="cb1-4" title="4">            <span class="bu">System</span>.<span class="fu">out</span>.<span class="fu">println</span>(repl.<span class="fu">String</span>());</a>
+<a class="sourceLine" id="cb1-5" title="5">            <span class="kw">return</span> id;</a>
+<a class="sourceLine" id="cb1-6" title="6">        }</a>
+<a class="sourceLine" id="cb1-7" title="7">        <span class="bu">System</span>.<span class="fu">out</span>.<span class="fu">println</span>(repl.<span class="fu">String</span>());</a>
+<a class="sourceLine" id="cb1-8" title="8">        <span class="kw">return</span> <span class="st">&quot;&quot;</span>;</a>
+<a class="sourceLine" id="cb1-9" title="9">    }</a></code></pre></div>
+<p>That was easy, right? All we had to do was adapt the pattern we used in our HelloSAM function to the <code>SESSION CREATE</code> command. A good reply from the bridge will still return OK, and in that case we return the ID of the newly created SAM connection. Let's see if this function works by writing a test for it:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode Java"><code class="sourceCode java"><a class="sourceLine" id="cb2-1" title="1">    <span class="at">@Test</span> <span class="kw">public</span> <span class="dt">void</span> <span class="fu">testCreateSession</span>() {</a>
 <a class="sourceLine" id="cb2-2" title="2">        Jsam classUnderTest = <span class="kw">new</span> <span class="fu">Jsam</span>();</a>
 <a class="sourceLine" id="cb2-3" title="3">        <span class="fu">assertTrue</span>(<span class="st">&quot;HelloSAM should return &#39;true&#39; in the presence of an alive SAM bridge&quot;</span>, classUnderTest.<span class="fu">HelloSAM</span>());</a>
-<a class="sourceLine" id="cb2-4" title="4">        <span class="fu">assertTrue</span>(<span class="st">&quot;CreateSession should return &#39;true&#39; in the presence of an alive SAM bridge&quot;</span>, classUnderTest.<span class="fu">CreateSession</span>(<span class="st">&quot;test&quot;</span>, <span class="st">&quot;&quot;</span>));</a>
+<a class="sourceLine" id="cb2-4" title="4">        <span class="fu">assertEquals</span>(<span class="st">&quot;test&quot;</span>, classUnderTest.<span class="fu">CreateSession</span>(<span class="st">&quot;test&quot;</span>, <span class="st">&quot;&quot;</span>));</a>
 <a class="sourceLine" id="cb2-5" title="5">    }</a></code></pre></div>
 <p>Note that in this test, we <em>must</em> call HelloSAM first to establish communication with SAM before starting our session. If not, the bridge will reply with an error and the test will fail.</p>
 <h3 id="sending-and-recieving-information">Sending and Recieving Information</h3>

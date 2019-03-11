@@ -7,25 +7,29 @@ command to the SAM Bridge. To do that, we'll use a CreateSession function that
 accepts a session ID and a destination type parameter.
 
 ``` Java
-    public boolean CreateSession(String id, String destination ){
-        Reply repl = CommandSAM("SESSION CREATE STYLE=STREAM ID=" + id + " DESTINATION=" + destination);
+    public String ConnectSession(String id, String destination) {
+        Reply repl = CommandSAM("STREAM CONNECT ID=" + id + " DESTINATION=" + destination);
         if (repl.result == Reply.REPLY_TYPES.OK) {
-            return true;
+            System.out.println(repl.String());
+            return id;
         }
-        return false;
+        System.out.println(repl.String());
+        return "";
     }
 ```
 
 That was easy, right? All we had to do was adapt the pattern we used in our
 HelloSAM function to the ```SESSION CREATE``` command. A good reply from the
-bridge will still return OK. Let's see if this function works by writing a test
-for it:
+bridge will still return OK, and in that case we return the ID of the newly
+created SAM connection. Otherwise, we return an empty string because that's an
+invalid ID anyway and it failed, so it's easy to check. Let's see if this
+function works by writing a test for it:
 
 ``` Java
     @Test public void testCreateSession() {
         Jsam classUnderTest = new Jsam();
         assertTrue("HelloSAM should return 'true' in the presence of an alive SAM bridge", classUnderTest.HelloSAM());
-        assertTrue("CreateSession should return 'true' in the presence of an alive SAM bridge", classUnderTest.CreateSession("test", ""));
+        assertEquals("test", classUnderTest.CreateSession("test", ""));
     }
 ```
 

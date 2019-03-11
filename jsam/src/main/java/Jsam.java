@@ -70,13 +70,13 @@ public class Jsam {
         System.out.println(repl.String());
         return false;
     }
-    public boolean CreateSession() {
+    public String CreateSession() {
         return CreateSession(generateID());
     }
-    public boolean CreateSession(String id) {
+    public String CreateSession(String id) {
         return CreateSession(id, "TRANSIENT");
     }
-    public boolean CreateSession(String id, String destination ) {
+    public String CreateSession(String id, String destination ) {
         if (destination == "") {
             destination = "TRANSIENT";
         }
@@ -87,19 +87,19 @@ public class Jsam {
         Reply repl = CommandSAM("SESSION CREATE STYLE=STREAM ID=" + ID + " DESTINATION=" + destination);
         if (repl.result == Reply.REPLY_TYPES.OK) {
             System.out.println(repl.String());
-            return true;
+            return id;
         }
         System.out.println(repl.String());
-        return false;
+        return "";
     }
-    public boolean ConnectSession(String id, String destination) {
+    public String ConnectSession(String id, String destination) {
         Reply repl = CommandSAM("STREAM CONNECT ID=" + id + " DESTINATION=" + destination);
         if (repl.result == Reply.REPLY_TYPES.OK) {
             System.out.println(repl.String());
-            return true;
+            return id;
         }
         System.out.println(repl.String());
-        return false;
+        return "";
     }
     public Reply CommandSAM(String args) {
         writer.println(args + "\n");

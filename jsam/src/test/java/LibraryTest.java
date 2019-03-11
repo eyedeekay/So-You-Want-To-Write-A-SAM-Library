@@ -14,7 +14,7 @@ public class LibraryTest {
     @Test public void testCreateSession() {
         Jsam classUnderTest = new Jsam();
         assertTrue("HelloSAM should return 'true' in the presence of an alive SAM bridge", classUnderTest.HelloSAM());
-        assertTrue("CreateSession should return 'true' in the presence of an alive SAM bridge", classUnderTest.CreateSession("test", ""));
+        assertEquals("test", classUnderTest.CreateSession("test", ""));
     }
     @Test public void testValidDefaultSAMAddress() {
         Jsam classUnderTest = new Jsam();

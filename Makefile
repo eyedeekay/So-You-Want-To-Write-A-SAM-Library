@@ -1,9 +1,9 @@
 
 index:
-	pandoc INTRO.md | tee index.html
-	pandoc SETUP.md| tee -a index.html
-	pandoc SESSION.md | tee -a index.html
-	pandoc OPTIONS.md | tee -a index.html
+	pandoc --highlight-style=tango -f gfm INTRO.md | tee index.html
+	pandoc --highlight-style=tango -f gfm SETUP.md| tee -a index.html
+	pandoc --highlight-style=tango -f gfm SESSION.md | tee -a index.html
+	pandoc --highlight-style=tango -f gfm OPTIONS.md | tee -a index.html
 	cat INTRO.md SETUP.md SESSION.md OPTIONS.md > README.md
 
 build:
