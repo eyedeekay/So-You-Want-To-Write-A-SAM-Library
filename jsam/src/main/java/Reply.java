@@ -8,6 +8,7 @@ import java.util.Arrays;
 public class Reply {
     String topic;
     String type;
+    REPLY_TYPES result;
     Map<String, String> replyMap = new HashMap<String, String>();
     enum REPLY_TYPES {
         OK,
@@ -19,16 +20,65 @@ public class Reply {
         KEY_NOT_FOUND,
         PEER_NOT_FOUND,
         TIMEOUT;
+        public static REPLY_TYPES set(String type) {
+            String temp = type.trim();
+            switch (temp) {
+            case "RESULT=OK":
+                return OK;
+            case "RESULT=CANT_REACH_PEER":
+                return CANT_REACH_PEER;
+            case "RESULT=DUPLICATED_ID":
+                return DUPLICATED_ID;
+            case "RESULT=DUPLICATED_DEST":
+                return DUPLICATED_DEST;
+            case "RESULT=I2P_ERROR":
+                return I2P_ERROR;
+            case "RESULT=INVALID_KEY":
+                return INVALID_KEY;
+            case "RESULT=KEY_NOT_FOUND":
+                return KEY_NOT_FOUND;
+            case "RESULT=PEER_NOT_FOUND":
+                return PEER_NOT_FOUND;
+            case "RESULT=TIMEOUT":
+                return TIMEOUT;
+            }
+            return CANT_REACH_PEER;
+        }
+        public static String get(REPLY_TYPES type) {
+            switch (type) {
+            case OK:
+                return "RESULT=OK";
+            case CANT_REACH_PEER:
+                return "RESULT=CANT_REACH_PEER";
+            case DUPLICATED_ID:
+                return "RESULT=DUPLICATED_ID";
+            case DUPLICATED_DEST:
+                return "RESULT=DUPLICATED_DEST";
+            case I2P_ERROR:
+                return "RESULT=I2P_ERROR";
+            case INVALID_KEY:
+                return "RESULT=INVALID_KEY";
+            case KEY_NOT_FOUND:
+                return "RESULT=KEY_NOT_FOUND";
+            case PEER_NOT_FOUND:
+                return "RESULT=PEER_NOT_FOUND";
+            case TIMEOUT:
+                return "RESULT=TIMEOUT";
+            }
+            return "RESULT=CANT_REACH_PEER";
+        }
     };
     public Reply(String reply) {
         String trimmed = reply.trim();
         String[] replyvalues = reply.split(" ");
         if (replyvalues.length < 3) {
-            //handle malformed reply here
+            //TODO: handle malformed reply here
         }
         topic = replyvalues[0];
-        topic = replyvalues[1];
-        String[] replyLast = Arrays.copyOfRange(replyvalues, 2, replyvalues.length);
+        type = replyvalues[1];
+        result = REPLY_TYPES.set(replyvalues[2]);
+
+        String[] replyLast = Arrays.copyOfRange(replyvalues, 3, replyvalues.length);
         for (int x = 0; x < replyLast.length; x++) {
             String[] kv = replyLast[x].split("=");
             if (kv.length != 2) {
@@ -36,5 +86,8 @@ public class Reply {
             }
             replyMap.put(kv[0], kv[1]);
         }
+    }
+    public String String() {
+        return topic + " " + type + " " + REPLY_TYPES.get(result) + " " + replyMap.toString();
     }
 }

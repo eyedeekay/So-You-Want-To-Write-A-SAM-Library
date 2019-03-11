@@ -7,9 +7,14 @@ import org.junit.Test;
 import static org.junit.Assert.*;
 
 public class LibraryTest {
-    @Test public void testSomeLibraryMethod() {
+    @Test public void testHelloSAM() {
         Jsam classUnderTest = new Jsam();
-        assertTrue("someLibraryMethod should return 'true'", classUnderTest.HelloSAM());
+        assertTrue("HelloSAM should return 'true' in the presence of an alive SAM bridge", classUnderTest.HelloSAM());
+    }
+    @Test public void testCreateSession() {
+        Jsam classUnderTest = new Jsam();
+        assertTrue("HelloSAM should return 'true' in the presence of an alive SAM bridge", classUnderTest.HelloSAM());
+        assertTrue("CreateSession should return 'true' in the presence of an alive SAM bridge", classUnderTest.CreateSession("test", ""));
     }
     @Test public void testValidDefaultSAMAddress() {
         Jsam classUnderTest = new Jsam();
@@ -17,6 +22,6 @@ public class LibraryTest {
     }
     @Test public void testValidDefaultSignatureType() {
         Jsam classUnderTest = new Jsam();
-        assertEquals("EdDSA_SHA512_Ed25519", classUnderTest.SignatureType());
+        assertEquals("SIGNATURE_TYPE=EdDSA_SHA512_Ed25519", classUnderTest.SignatureType());
     }
 }
