@@ -243,7 +243,7 @@ sign and terminated by a newline.
     public Reply(String reply) {
         String trimmed = reply.trim();
         String[] replyvalues = reply.split(" ");
-        if (replyvalues.length < 3) {
+        if (replyvalues.length <= 3) {
             //omitted for brevity
         }
         topic = replyvalues[0];

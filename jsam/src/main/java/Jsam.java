@@ -35,7 +35,7 @@ public class Jsam extends Socket {
     }
     public void startConnection() {
         try {
-            this.connect(new InetSocketAddress(SAMHost, SAMPort));
+            this.connect(new InetSocketAddress(SAMHost, SAMPort), 600 );
             writer = new PrintWriter(this.getOutputStream(), true);
             reader = new BufferedReader(new InputStreamReader(this.getInputStream()));
         } catch (Exception e) {
@@ -61,7 +61,7 @@ public class Jsam extends Socket {
         return "";
     }
     public boolean HelloSAM() {
-        Reply repl = CommandSAM("HELLO VERSION MIN=3.0 MAX=3.1\n");
+        Reply repl = CommandSAM("HELLO VERSION MIN=3.0 MAX=3.1");
         if (repl.result == Reply.REPLY_TYPES.OK) {
             System.out.println(repl.String());
             return true;
@@ -69,13 +69,13 @@ public class Jsam extends Socket {
         System.out.println(repl.String());
         return false;
     }
-    public String CreateSession() {
+    public String[] CreateSession() {
         return CreateSession(generateID());
     }
-    public String CreateSession(String id) {
+    public String[] CreateSession(String id) {
         return CreateSession(id, "TRANSIENT");
     }
-    public String CreateSession(String id, String destination ) {
+    public String[] CreateSession(String id, String destination ) {
         if (destination == "") {
             destination = "TRANSIENT";
         }
@@ -83,20 +83,23 @@ public class Jsam extends Socket {
             id = generateID();
         }
         ID = id;
-        String cmd = "SESSION CREATE STYLE=STREAM ID=" + ID + " DESTINATION=" + destination + "\n";
+        String cmd = "SESSION CREATE STYLE=STREAM ID=" + ID + " DESTINATION=" + destination;
         Reply repl = CommandSAM(cmd);
         if (repl.result == Reply.REPLY_TYPES.OK) {
             System.out.println(repl.String());
-            return id;
+            return new String[] {id, repl.replyMap.get("DESTINATION")};
         }
         System.out.println(repl.String());
-        return "";
+        return new String[] {"", ""};
     }
     public String ConnectSession(String destination) {
         return ConnectSession(ID, destination);
     }
     public String ConnectSession(String id, String destination) {
-        String cmd = "STREAM CONNECT ID=" + id + " DESTINATION=" + destination + "\n";
+        if (destination.endsWith(".i2p")) {
+            destination = LookupName(destination);
+        }
+        String cmd = "STREAM CONNECT ID=" + id + " DESTINATION=" + destination;
         Reply repl = CommandSAM(cmd);
         if (repl.result == Reply.REPLY_TYPES.OK) {
             System.out.println(repl.String());
@@ -106,7 +109,7 @@ public class Jsam extends Socket {
         return "";
     }
     public String LookupName(String name) {
-        String cmd = "NAMING LOOKUP NAME=" + name + "\n";
+        String cmd = "NAMING LOOKUP NAME=" + name;
         Reply repl = CommandSAM(cmd);
         if (repl.result == Reply.REPLY_TYPES.OK) {
             System.out.println(repl.replyMap.get("VALUE"));
@@ -132,6 +135,11 @@ public class Jsam extends Socket {
         return sb.toString();
     }
     public void close() {
+        try {
+            writer.close();
+            reader.close();
+        } catch(Exception e) {
 
+        }
     }
 }

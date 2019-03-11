@@ -6,9 +6,9 @@ import java.util.HashMap;
 import java.util.Arrays;
 
 public class Reply {
-    String topic;
-    String type;
-    REPLY_TYPES result = REPLY_TYPES.I2P_ERROR;
+    String topic = "";
+    String type = "";
+    REPLY_TYPES result = REPLY_TYPES.UNSET;
     Map<String, String> replyMap = new HashMap<String, String>();
     enum REPLY_TYPES {
         OK,
@@ -19,7 +19,8 @@ public class Reply {
         INVALID_KEY,
         KEY_NOT_FOUND,
         PEER_NOT_FOUND,
-        TIMEOUT;
+        TIMEOUT,
+        UNSET;
         public static REPLY_TYPES set(String type) {
             String temp = type.trim();
             switch (temp) {
@@ -74,9 +75,10 @@ public class Reply {
         if (replyvalues.length <= 3) {
             //TODO: handle malformed reply here
             //return
-            System.out.println(reply);
+            System.out.println("Malformed reply: " + reply);
             return;
         }
+        System.out.println("Forming reply: " + reply);
         topic = replyvalues[0];
         type = replyvalues[1];
         result = REPLY_TYPES.set(replyvalues[2]);

@@ -179,7 +179,7 @@
 <div class="sourceCode" id="cb11"><pre class="sourceCode Java"><code class="sourceCode java"><a class="sourceLine" id="cb11-1" title="1">    <span class="kw">public</span> <span class="fu">Reply</span>(<span class="bu">String</span> reply) {</a>
 <a class="sourceLine" id="cb11-2" title="2">        <span class="bu">String</span> trimmed = reply.<span class="fu">trim</span>();</a>
 <a class="sourceLine" id="cb11-3" title="3">        <span class="bu">String</span>[] replyvalues = reply.<span class="fu">split</span>(<span class="st">&quot; &quot;</span>);</a>
-<a class="sourceLine" id="cb11-4" title="4">        <span class="kw">if</span> (replyvalues.<span class="fu">length</span> &lt; <span class="dv">3</span>) {</a>
+<a class="sourceLine" id="cb11-4" title="4">        <span class="kw">if</span> (replyvalues.<span class="fu">length</span> &lt;= <span class="dv">3</span>) {</a>
 <a class="sourceLine" id="cb11-5" title="5">            <span class="co">//omitted for brevity</span></a>
 <a class="sourceLine" id="cb11-6" title="6">        }</a>
 <a class="sourceLine" id="cb11-7" title="7">        topic = replyvalues[<span class="dv">0</span>];</a>
@@ -238,7 +238,21 @@
 <p>Note that in this test, we <em>must</em> call HelloSAM first to establish communication with SAM before starting our session. If not, the bridge will reply with an error and the test will fail.</p>
 <h3 id="looking-up-hosts-by-name-or-b32">Looking up Hosts by name or .b32</h3>
 <p>Now you have your session established and your local destination, and need to decide what you want to do with them. Your session can now be commanded to connect to a remote service over I2P, or to wait for incoming connections to respond to. However, before you can connect to a remote destination, you may need to obtain the base64 of the destination, which is what the API expects. In order to do this, we'll create a LookupName function, which will return the base64 in a usable form.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode Java"><code class="sourceCode java"></code></pre></div>
-<div class="sourceCode" id="cb4"><pre class="sourceCode Java"><code class="sourceCode java"></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode Java"><code class="sourceCode java"><a class="sourceLine" id="cb3-1" title="1">    <span class="kw">public</span> <span class="bu">String</span> <span class="fu">LookupName</span>(<span class="bu">String</span> name) {</a>
+<a class="sourceLine" id="cb3-2" title="2">        <span class="bu">String</span> cmd = <span class="st">&quot;NAMING LOOKUP NAME=&quot;</span> + name + <span class="st">&quot;</span><span class="sc">\n</span><span class="st">&quot;</span>;</a>
+<a class="sourceLine" id="cb3-3" title="3">        Reply repl = <span class="fu">CommandSAM</span>(cmd);</a>
+<a class="sourceLine" id="cb3-4" title="4">        <span class="kw">if</span> (repl.<span class="fu">result</span> == Reply.<span class="fu">REPLY_TYPES</span>.<span class="fu">OK</span>) {</a>
+<a class="sourceLine" id="cb3-5" title="5">            <span class="bu">System</span>.<span class="fu">out</span>.<span class="fu">println</span>(repl.<span class="fu">replyMap</span>.<span class="fu">get</span>(<span class="st">&quot;VALUE&quot;</span>));</a>
+<a class="sourceLine" id="cb3-6" title="6">            <span class="kw">return</span> repl.<span class="fu">replyMap</span>.<span class="fu">get</span>(<span class="st">&quot;VALUE&quot;</span>);</a>
+<a class="sourceLine" id="cb3-7" title="7">        }</a>
+<a class="sourceLine" id="cb3-8" title="8">        <span class="kw">return</span> <span class="st">&quot;&quot;</span>;</a>
+<a class="sourceLine" id="cb3-9" title="9">    }</a></code></pre></div>
+<p>Again, this is almost the same as our HelloSAM and CreateSession functions, with one difference. Since we're looking for the VALUE specifically and the NAME field will be the same as the <code>name</code> argument, it simply returns the base64 string of the destination requested.</p>
+<p>Now that we have our LookupName function, let's test it:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode Java"><code class="sourceCode java"><a class="sourceLine" id="cb4-1" title="1">    <span class="at">@Test</span> <span class="kw">public</span> <span class="dt">void</span> <span class="fu">testLookupName</span>() {</a>
+<a class="sourceLine" id="cb4-2" title="2">        Jsam classUnderTest = <span class="kw">new</span> <span class="fu">Jsam</span>();</a>
+<a class="sourceLine" id="cb4-3" title="3">        <span class="fu">assertTrue</span>(<span class="st">&quot;HelloSAM should return &#39;true&#39; in the presence of an alive SAM bridge&quot;</span>, classUnderTest.<span class="fu">HelloSAM</span>());</a>
+<a class="sourceLine" id="cb4-4" title="4">        <span class="fu">assertEquals</span>(<span class="st">&quot;8ZAW~KzGFMUEj0pdchy6GQOOZbuzbqpWtiApEj8LHy2~O~58XKxRrA43cA23a9oDpNZDqWhRWEtehSnX5NoCwJcXWWdO1ksKEUim6cQLP-VpQyuZTIIqwSADwgoe6ikxZG0NGvy5FijgxF4EW9zg39nhUNKRejYNHhOBZKIX38qYyXoB8XCVJybKg89aMMPsCT884F0CLBKbHeYhpYGmhE4YW~aV21c5pebivvxeJPWuTBAOmYxAIgJE3fFU-fucQn9YyGUFa8F3t-0Vco-9qVNSEWfgrdXOdKT6orr3sfssiKo3ybRWdTpxycZ6wB4qHWgTSU5A-gOA3ACTCMZBsASN3W5cz6GRZCspQ0HNu~R~nJ8V06Mmw~iVYOu5lDvipmG6-dJky6XRxCedczxMM1GWFoieQ8Ysfuxq-j8keEtaYmyUQme6TcviCEvQsxyVirr~dTC-F8aZ~y2AlG5IJz5KD02nO6TRkI2fgjHhv9OZ9nskh-I2jxAzFP6Is1kyAAAA&quot;</span>, classUnderTest.<span class="fu">LookupName</span>(<span class="st">&quot;i2p-projekt.i2p&quot;</span>));</a>
+<a class="sourceLine" id="cb4-5" title="5">    }</a></code></pre></div>
 <h3 id="sending-and-recieving-information">Sending and Recieving Information</h3>
 
