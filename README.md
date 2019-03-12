@@ -1,6 +1,8 @@
 So You Want To Write A SAM Library
 ==================================
 
+*Or, talking to i2p for people who aren't really used to reading specs*
+
 One of the best features of I2P, in my opinion, is it's SAM API, which can be
 used to build a bridge between I2P and your application or language of choice.
 Currently, dozens of SAM libraries exist for a variety of languages, including:

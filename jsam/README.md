@@ -8,3 +8,5 @@ folder will deviate from the version presented in the tutorial, which has been
 deliberately presented in a simple way. It expects implementers to figure out
 how to do language-specific things on their own, which is in fact part of why I
 decided to write it(I need to get the hang of Java again).
+
+It has a number of obvious shortcomings at this time.
