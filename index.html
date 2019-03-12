@@ -186,7 +186,7 @@
 <a class="sourceLine" id="cb11-8" title="8">        type = replyvalues[<span class="dv">1</span>];</a>
 <a class="sourceLine" id="cb11-9" title="9">        result = REPLY_TYPES.<span class="fu">set</span>(replyvalues[<span class="dv">2</span>]);</a>
 <a class="sourceLine" id="cb11-10" title="10"></a>
-<a class="sourceLine" id="cb11-11" title="11">        <span class="bu">String</span>[] replyLast = <span class="bu">Arrays</span>.<span class="fu">copyOfRange</span>(replyvalues, <span class="dv">3</span>, replyvalues.<span class="fu">length</span>);</a>
+<a class="sourceLine" id="cb11-11" title="11">        <span class="bu">String</span>[] replyLast = <span class="bu">Arrays</span>.<span class="fu">copyOfRange</span>(replyvalues, <span class="dv">2</span>, replyvalues.<span class="fu">length</span>);</a>
 <a class="sourceLine" id="cb11-12" title="12">        <span class="kw">for</span> (<span class="dt">int</span> x = <span class="dv">0</span>; x &lt; replyLast.<span class="fu">length</span>; x++) {</a>
 <a class="sourceLine" id="cb11-13" title="13">            <span class="bu">String</span>[] kv = replyLast[x].<span class="fu">split</span>(<span class="st">&quot;=&quot;</span>, <span class="dv">2</span>);</a>
 <a class="sourceLine" id="cb11-14" title="14">            <span class="kw">if</span> (kv.<span class="fu">length</span> != <span class="dv">2</span>) {</a>
@@ -255,4 +255,54 @@
 <a class="sourceLine" id="cb4-4" title="4">        <span class="fu">assertEquals</span>(<span class="st">&quot;8ZAW~KzGFMUEj0pdchy6GQOOZbuzbqpWtiApEj8LHy2~O~58XKxRrA43cA23a9oDpNZDqWhRWEtehSnX5NoCwJcXWWdO1ksKEUim6cQLP-VpQyuZTIIqwSADwgoe6ikxZG0NGvy5FijgxF4EW9zg39nhUNKRejYNHhOBZKIX38qYyXoB8XCVJybKg89aMMPsCT884F0CLBKbHeYhpYGmhE4YW~aV21c5pebivvxeJPWuTBAOmYxAIgJE3fFU-fucQn9YyGUFa8F3t-0Vco-9qVNSEWfgrdXOdKT6orr3sfssiKo3ybRWdTpxycZ6wB4qHWgTSU5A-gOA3ACTCMZBsASN3W5cz6GRZCspQ0HNu~R~nJ8V06Mmw~iVYOu5lDvipmG6-dJky6XRxCedczxMM1GWFoieQ8Ysfuxq-j8keEtaYmyUQme6TcviCEvQsxyVirr~dTC-F8aZ~y2AlG5IJz5KD02nO6TRkI2fgjHhv9OZ9nskh-I2jxAzFP6Is1kyAAAA&quot;</span>, classUnderTest.<span class="fu">LookupName</span>(<span class="st">&quot;i2p-projekt.i2p&quot;</span>));</a>
 <a class="sourceLine" id="cb4-5" title="5">    }</a></code></pre></div>
 <h3 id="sending-and-recieving-information">Sending and Recieving Information</h3>
+<p>At last, we are going to establish a connection to another service with our new library. This part confused me a bit at first, but the most astute Java developers were probably wondering why we didn't extend the socket class instead of creating a Socket variable inside of the Jsam class. That's because until now, we've been communicating with the &quot;Control Socket&quot; and we need to create a new socket to do the actual communication. So we've waited to extend the the Socket class with the Jsam class until now:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode Java"><code class="sourceCode java"><a class="sourceLine" id="cb5-1" title="1"><span class="kw">public</span> <span class="kw">class</span> Jsam <span class="kw">extends</span> <span class="bu">Socket</span> {</a></code></pre></div>
+<p>Also, let's alter our startConnection function so that we can use it to switch over from the control socket to the socket we'll be using in our application. It will now take a Socket argument.</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode Java"><code class="sourceCode java"><a class="sourceLine" id="cb6-1" title="1">    <span class="kw">public</span> <span class="dt">void</span> <span class="fu">startConnection</span>(<span class="bu">Socket</span> socket) {</a>
+<a class="sourceLine" id="cb6-2" title="2">        <span class="kw">try</span> {</a>
+<a class="sourceLine" id="cb6-3" title="3">            socket.<span class="fu">connect</span>(<span class="kw">new</span> <span class="bu">InetSocketAddress</span>(SAMHost, SAMPort), <span class="dv">600</span> );</a>
+<a class="sourceLine" id="cb6-4" title="4">        } <span class="kw">catch</span> (<span class="bu">Exception</span> e) {</a>
+<a class="sourceLine" id="cb6-5" title="5">            <span class="bu">System</span>.<span class="fu">out</span>.<span class="fu">println</span>(e);</a>
+<a class="sourceLine" id="cb6-6" title="6">        }</a>
+<a class="sourceLine" id="cb6-7" title="7">        <span class="kw">try</span> {</a>
+<a class="sourceLine" id="cb6-8" title="8">            writer = <span class="kw">new</span> <span class="bu">PrintWriter</span>(socket.<span class="fu">getOutputStream</span>(), <span class="kw">true</span>);</a>
+<a class="sourceLine" id="cb6-9" title="9">        } <span class="kw">catch</span> (<span class="bu">Exception</span> e) {</a>
+<a class="sourceLine" id="cb6-10" title="10">            <span class="bu">System</span>.<span class="fu">out</span>.<span class="fu">println</span>(e);</a>
+<a class="sourceLine" id="cb6-11" title="11">        }</a>
+<a class="sourceLine" id="cb6-12" title="12">        <span class="kw">try</span> {</a>
+<a class="sourceLine" id="cb6-13" title="13">            reader = <span class="kw">new</span> <span class="bu">BufferedReader</span>(<span class="kw">new</span> <span class="bu">InputStreamReader</span>(socket.<span class="fu">getInputStream</span>()));</a>
+<a class="sourceLine" id="cb6-14" title="14">        } <span class="kw">catch</span> (<span class="bu">Exception</span> e) {</a>
+<a class="sourceLine" id="cb6-15" title="15">            <span class="bu">System</span>.<span class="fu">out</span>.<span class="fu">println</span>(e);</a>
+<a class="sourceLine" id="cb6-16" title="16">        }</a>
+<a class="sourceLine" id="cb6-17" title="17">    }</a></code></pre></div>
+<p>This allows us to quickly and easily open a new socket to communicate over, perform the &quot;Hello SAM&quot; handshake over again, and connect the stream.</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode Java"><code class="sourceCode java"><a class="sourceLine" id="cb7-1" title="1">    <span class="kw">public</span> <span class="bu">String</span> <span class="fu">ConnectSession</span>(<span class="bu">String</span> id, <span class="bu">String</span> destination) {</a>
+<a class="sourceLine" id="cb7-2" title="2">        <span class="fu">startConnection</span>(<span class="kw">this</span>);</a>
+<a class="sourceLine" id="cb7-3" title="3">        <span class="fu">HelloSAM</span>();</a>
+<a class="sourceLine" id="cb7-4" title="4">        <span class="kw">if</span> (destination.<span class="fu">endsWith</span>(<span class="st">&quot;.i2p&quot;</span>)) {</a>
+<a class="sourceLine" id="cb7-5" title="5">            destination = <span class="fu">LookupName</span>(destination);</a>
+<a class="sourceLine" id="cb7-6" title="6">        }</a>
+<a class="sourceLine" id="cb7-7" title="7">        <span class="bu">String</span> cmd = <span class="st">&quot;STREAM CONNECT ID=&quot;</span> + id + <span class="st">&quot; DESTINATION=&quot;</span> + destination + <span class="st">&quot; SILENT=false&quot;</span>;</a>
+<a class="sourceLine" id="cb7-8" title="8">        Reply repl = <span class="fu">CommandSAM</span>(cmd);</a>
+<a class="sourceLine" id="cb7-9" title="9">        <span class="kw">if</span> (repl.<span class="fu">result</span> == Reply.<span class="fu">REPLY_TYPES</span>.<span class="fu">OK</span>) {</a>
+<a class="sourceLine" id="cb7-10" title="10">            <span class="bu">System</span>.<span class="fu">out</span>.<span class="fu">println</span>(repl.<span class="fu">String</span>());</a>
+<a class="sourceLine" id="cb7-11" title="11">            <span class="kw">return</span> id;</a>
+<a class="sourceLine" id="cb7-12" title="12">        }</a>
+<a class="sourceLine" id="cb7-13" title="13">        <span class="bu">System</span>.<span class="fu">out</span>.<span class="fu">println</span>(repl.<span class="fu">String</span>());</a>
+<a class="sourceLine" id="cb7-14" title="14">        <span class="kw">return</span> <span class="st">&quot;&quot;</span>;</a>
+<a class="sourceLine" id="cb7-15" title="15">    }</a></code></pre></div>
+<p>And now you have a new Socket for communicating over SAM! Let's do the same thing for Accepting remote connections:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode Java"><code class="sourceCode java"><a class="sourceLine" id="cb8-1" title="1">    <span class="kw">public</span> <span class="bu">String</span> <span class="fu">AcceptSession</span>(<span class="bu">String</span> id) {</a>
+<a class="sourceLine" id="cb8-2" title="2">        <span class="fu">startConnection</span>(<span class="kw">this</span>);</a>
+<a class="sourceLine" id="cb8-3" title="3">        <span class="fu">HelloSAM</span>();</a>
+<a class="sourceLine" id="cb8-4" title="4">        <span class="bu">String</span> cmd = <span class="st">&quot;STREAM ACCEPT ID=&quot;</span> + id  + <span class="st">&quot; SILENT=false&quot;</span>;</a>
+<a class="sourceLine" id="cb8-5" title="5">        Reply repl = <span class="fu">CommandSAM</span>(cmd);</a>
+<a class="sourceLine" id="cb8-6" title="6">        <span class="kw">if</span> (repl.<span class="fu">result</span> == Reply.<span class="fu">REPLY_TYPES</span>.<span class="fu">OK</span>) {</a>
+<a class="sourceLine" id="cb8-7" title="7">            <span class="bu">System</span>.<span class="fu">out</span>.<span class="fu">println</span>(repl.<span class="fu">String</span>());</a>
+<a class="sourceLine" id="cb8-8" title="8">            <span class="kw">return</span> id;</a>
+<a class="sourceLine" id="cb8-9" title="9">        }</a>
+<a class="sourceLine" id="cb8-10" title="10">        <span class="bu">System</span>.<span class="fu">out</span>.<span class="fu">println</span>(repl.<span class="fu">String</span>());</a>
+<a class="sourceLine" id="cb8-11" title="11">        <span class="kw">return</span> <span class="st">&quot;&quot;</span>;</a>
+<a class="sourceLine" id="cb8-12" title="12">    }</a></code></pre></div>
+<p>There you have it. That's how you build a SAM library, step-by-step. In the future, I will cross-reference this with the working version of the library, Jsam, and the SAM v3 specification but for now I've got to get some other stuff done.</p>
 

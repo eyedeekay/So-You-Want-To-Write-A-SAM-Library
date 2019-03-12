@@ -298,7 +298,7 @@ sign and terminated by a newline.
         type = replyvalues[1];
         result = REPLY_TYPES.set(replyvalues[2]);
 
-        String[] replyLast = Arrays.copyOfRange(replyvalues, 3, replyvalues.length);
+        String[] replyLast = Arrays.copyOfRange(replyvalues, 2, replyvalues.length);
         for (int x = 0; x < replyLast.length; x++) {
             String[] kv = replyLast[x].split("=", 2);
             if (kv.length != 2) {
@@ -435,3 +435,82 @@ Now that we have our LookupName function, let's test it:
 
 ### Sending and Recieving Information
 
+At last, we are going to establish a connection to another service with our new
+library. This part confused me a bit at first, but the most astute Java
+developers were probably wondering why we didn't extend the socket class
+instead of creating a Socket variable inside of the Jsam class. That's because
+until now, we've been communicating with the "Control Socket" and we need to
+create a new socket to do the actual communication. So we've waited to extend
+the the Socket class with the Jsam class until now:
+
+``` Java
+public class Jsam extends Socket {
+```
+
+Also, let's alter our startConnection function so that we can use it to switch
+over from the control socket to the socket we'll be using in our application. It
+will now take a Socket argument.
+
+``` Java
+    public void startConnection(Socket socket) {
+        try {
+            socket.connect(new InetSocketAddress(SAMHost, SAMPort), 600 );
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        try {
+            writer = new PrintWriter(socket.getOutputStream(), true);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        try {
+            reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
+```
+
+This allows us to quickly and easily open a new socket to communicate over,
+perform the "Hello SAM" handshake over again, and connect the stream.
+
+``` Java
+    public String ConnectSession(String id, String destination) {
+        startConnection(this);
+        HelloSAM();
+        if (destination.endsWith(".i2p")) {
+            destination = LookupName(destination);
+        }
+        String cmd = "STREAM CONNECT ID=" + id + " DESTINATION=" + destination + " SILENT=false";
+        Reply repl = CommandSAM(cmd);
+        if (repl.result == Reply.REPLY_TYPES.OK) {
+            System.out.println(repl.String());
+            return id;
+        }
+        System.out.println(repl.String());
+        return "";
+    }
+```
+
+And now you have a new Socket for communicating over SAM! Let's do the same
+thing for Accepting remote connections:
+
+``` Java
+    public String AcceptSession(String id) {
+        startConnection(this);
+        HelloSAM();
+        String cmd = "STREAM ACCEPT ID=" + id  + " SILENT=false";
+        Reply repl = CommandSAM(cmd);
+        if (repl.result == Reply.REPLY_TYPES.OK) {
+            System.out.println(repl.String());
+            return id;
+        }
+        System.out.println(repl.String());
+        return "";
+    }
+```
+
+There you have it. That's how you build a SAM library, step-by-step. In the
+future, I will cross-reference this with the working version of the library,
+Jsam, and the SAM v3 specification but for now I've got to get some other stuff
+done.
