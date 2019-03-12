@@ -12,6 +12,7 @@ public class Jsam extends Socket {
     public String SAMHost = "127.0.0.1";
     public int SAMPort = 7656;
     private String ID = "";
+    private Socket control = new Socket();
     private PrintWriter writer;
     private BufferedReader reader;
     private static final String ALPHABET = "0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ-_";
@@ -25,21 +26,29 @@ public class Jsam extends Socket {
     }
     public SIGNATURE_TYPE SigType = SIGNATURE_TYPE.EdDSA_SHA512_Ed25519;
     public Jsam() {
-        startConnection();
+        startConnection(control);
     }
     public Jsam(String host, int port, SIGNATURE_TYPE sig) {
         SAMHost = host;
         SAMPort = port;
         SigType = sig;
-        startConnection();
+        startConnection(control);
     }
-    public void startConnection() {
+    public void startConnection(Socket socket) {
         try {
-            this.connect(new InetSocketAddress(SAMHost, SAMPort), 600 );
-            writer = new PrintWriter(this.getOutputStream(), true);
-            reader = new BufferedReader(new InputStreamReader(this.getInputStream()));
+            socket.connect(new InetSocketAddress(SAMHost, SAMPort), 600 );
         } catch (Exception e) {
-
+            System.out.println(e);
+        }
+        try {
+            writer = new PrintWriter(socket.getOutputStream(), true);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+        try {
+            reader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        } catch (Exception e) {
+            System.out.println(e);
         }
     }
     public String SAMAddress() {
@@ -61,8 +70,7 @@ public class Jsam extends Socket {
         return "";
     }
     public boolean HelloSAM() {
-        startConnection();
-        Reply repl = CommandSAM("HELLO VERSION MIN=3.0 MAX=3.1");
+        Reply repl = CommandSAM("HELLO VERSION MIN=3.1 MAX=3.1");
         if (repl.result == Reply.REPLY_TYPES.OK) {
             System.out.println(repl.String());
             return true;
@@ -98,7 +106,8 @@ public class Jsam extends Socket {
         return ConnectSession(ID, destination);
     }
     public String ConnectSession(String id, String destination) {
-        //HelloSAM();
+        startConnection(this);
+        HelloSAM();
         if (destination.endsWith(".i2p")) {
             destination = LookupName(destination);
         }
@@ -115,7 +124,8 @@ public class Jsam extends Socket {
         return AcceptSession(ID);
     }
     public String AcceptSession(String id) {
-        //HelloSAM();
+        startConnection(this);
+        HelloSAM();
         String cmd = "STREAM ACCEPT ID=" + id  + " SILENT=false";
         Reply repl = CommandSAM(cmd);
         if (repl.result == Reply.REPLY_TYPES.OK) {
@@ -129,7 +139,6 @@ public class Jsam extends Socket {
         String cmd = "NAMING LOOKUP NAME=" + name;
         Reply repl = CommandSAM(cmd);
         if (repl.result == Reply.REPLY_TYPES.OK) {
-            System.out.println(repl.replyMap.get("VALUE"));
             return repl.replyMap.get("VALUE");
         }
         return "";

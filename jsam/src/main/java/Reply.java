@@ -4,11 +4,13 @@ import java.lang.String;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Arrays;
+/* TODO: space-delimited strings with optional quoting. For now only the first
+word of the error is passed on, which is not ideal.
 import java.util.List;
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 import java.util.regex.Matcher;
-
+*/
 public class Reply {
     String topic = "";
     String type = "";
@@ -79,18 +81,16 @@ public class Reply {
             System.out.println("Malformed reply: " + reply + replyvalues.length);
             return;
         }
-        System.out.println("Forming reply: " + reply);
         topic = replyvalues[0];
         type = replyvalues[1];
         result = REPLY_TYPES.set(replyvalues[2]);
 
         String[] replyLast = Arrays.copyOfRange(replyvalues, 2, replyvalues.length);
-        for (int x = 0; x < replyLast.length; x++) {
+        for (int x = 0; x < replyLast.length; ++x) {
             String[] kv = replyLast[x].split("=", 2);
-            if (kv.length != 2) {
-                break;
+            if (kv.length == 2) {
+                replyMap.put(kv[0], kv[1]);
             }
-            replyMap.put(kv[0], kv[1]);
         }
     }
     public String String() {

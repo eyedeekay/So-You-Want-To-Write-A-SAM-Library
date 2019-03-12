@@ -78,3 +78,23 @@ Now that we have our LookupName function, let's test it:
 
 ### Sending and Recieving Information
 
+At last, we are going to establish a connection to another service with our new
+library.
+
+
+``` Java
+    public String ConnectSession(String id, String destination) {
+        if (destination.endsWith(".i2p")) {
+            destination = LookupName(destination);
+        }
+        String cmd = "STREAM CONNECT ID=" + id + " DESTINATION=" + destination + " SILENT=false";
+        Reply repl = CommandSAM(cmd);
+        if (repl.result == Reply.REPLY_TYPES.OK) {
+            System.out.println(repl.String());
+            return id;
+        }
+        System.out.println(repl.String());
+        return "";
+    }
+```
+

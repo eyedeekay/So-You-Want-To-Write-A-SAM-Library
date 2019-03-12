@@ -46,8 +46,8 @@ public class LibraryTest {
         System.out.println("\n--- Testing ConnectSession");
         Jsam classUnderTest = new Jsam();
         classUnderTest.HelloSAM();
-        String id = classUnderTest.CreateSession("test-2", "")[0];
-        assertEquals(id, classUnderTest.ConnectSession(id, "i2p-projekt.i2p"));
+        String id = "connectreadable";
+        assertEquals(id, classUnderTest.ConnectSession(classUnderTest.CreateSession(id, "")[0], "i2p-projekt.i2p"));
     }*/
     @Test public void testAcceptSession() {
         System.out.println("\n--- Testing AcceptSession");
