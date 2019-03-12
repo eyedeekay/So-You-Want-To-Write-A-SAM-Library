@@ -74,11 +74,8 @@ public class Reply {
         }
     };
     public Reply(String reply) {
-         //reply = ;
         String[] replyvalues = reply.trim().split(" ");
         if (replyvalues.length < 2) {
-            //TODO: handle malformed reply here
-            //return
             System.out.println("Malformed reply: " + reply + replyvalues.length);
             return;
         }
@@ -87,7 +84,7 @@ public class Reply {
         type = replyvalues[1];
         result = REPLY_TYPES.set(replyvalues[2]);
 
-        String[] replyLast = Arrays.copyOfRange(replyvalues, 3, replyvalues.length);
+        String[] replyLast = Arrays.copyOfRange(replyvalues, 2, replyvalues.length);
         for (int x = 0; x < replyLast.length; x++) {
             String[] kv = replyLast[x].split("=", 2);
             if (kv.length != 2) {

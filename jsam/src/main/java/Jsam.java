@@ -98,7 +98,7 @@ public class Jsam extends Socket {
         return ConnectSession(ID, destination);
     }
     public String ConnectSession(String id, String destination) {
-        HelloSAM();
+        //HelloSAM();
         if (destination.endsWith(".i2p")) {
             destination = LookupName(destination);
         }
