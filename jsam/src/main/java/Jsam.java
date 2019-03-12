@@ -61,6 +61,7 @@ public class Jsam extends Socket {
         return "";
     }
     public boolean HelloSAM() {
+        startConnection();
         Reply repl = CommandSAM("HELLO VERSION MIN=3.0 MAX=3.1");
         if (repl.result == Reply.REPLY_TYPES.OK) {
             System.out.println(repl.String());
@@ -97,7 +98,7 @@ public class Jsam extends Socket {
         return ConnectSession(ID, destination);
     }
     public String ConnectSession(String id, String destination) {
-        //HelloSAM();
+        HelloSAM();
         if (destination.endsWith(".i2p")) {
             destination = LookupName(destination);
         }

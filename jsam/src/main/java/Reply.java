@@ -4,6 +4,10 @@ import java.lang.String;
 import java.util.Map;
 import java.util.HashMap;
 import java.util.Arrays;
+import java.util.List;
+import java.util.ArrayList;
+import java.util.regex.Pattern;
+import java.util.regex.Matcher;
 
 public class Reply {
     String topic = "";
@@ -70,8 +74,8 @@ public class Reply {
         }
     };
     public Reply(String reply) {
-        String trimmed = reply.trim();
-        String[] replyvalues = reply.split(" ");
+         //reply = ;
+        String[] replyvalues = reply.trim().split(" ");
         if (replyvalues.length < 2) {
             //TODO: handle malformed reply here
             //return
