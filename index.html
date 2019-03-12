@@ -179,7 +179,7 @@
 <div class="sourceCode" id="cb11"><pre class="sourceCode Java"><code class="sourceCode java"><a class="sourceLine" id="cb11-1" title="1">    <span class="kw">public</span> <span class="fu">Reply</span>(<span class="bu">String</span> reply) {</a>
 <a class="sourceLine" id="cb11-2" title="2">        <span class="bu">String</span> trimmed = reply.<span class="fu">trim</span>();</a>
 <a class="sourceLine" id="cb11-3" title="3">        <span class="bu">String</span>[] replyvalues = reply.<span class="fu">split</span>(<span class="st">&quot; &quot;</span>);</a>
-<a class="sourceLine" id="cb11-4" title="4">        <span class="kw">if</span> (replyvalues.<span class="fu">length</span> &lt;= <span class="dv">3</span>) {</a>
+<a class="sourceLine" id="cb11-4" title="4">        <span class="kw">if</span> (replyvalues.<span class="fu">length</span> &lt; <span class="dv">2</span>) {</a>
 <a class="sourceLine" id="cb11-5" title="5">            <span class="co">//omitted for brevity</span></a>
 <a class="sourceLine" id="cb11-6" title="6">        }</a>
 <a class="sourceLine" id="cb11-7" title="7">        topic = replyvalues[<span class="dv">0</span>];</a>
@@ -188,7 +188,7 @@
 <a class="sourceLine" id="cb11-10" title="10"></a>
 <a class="sourceLine" id="cb11-11" title="11">        <span class="bu">String</span>[] replyLast = <span class="bu">Arrays</span>.<span class="fu">copyOfRange</span>(replyvalues, <span class="dv">3</span>, replyvalues.<span class="fu">length</span>);</a>
 <a class="sourceLine" id="cb11-12" title="12">        <span class="kw">for</span> (<span class="dt">int</span> x = <span class="dv">0</span>; x &lt; replyLast.<span class="fu">length</span>; x++) {</a>
-<a class="sourceLine" id="cb11-13" title="13">            <span class="bu">String</span>[] kv = replyLast[x].<span class="fu">split</span>(<span class="st">&quot;=&quot;</span>);</a>
+<a class="sourceLine" id="cb11-13" title="13">            <span class="bu">String</span>[] kv = replyLast[x].<span class="fu">split</span>(<span class="st">&quot;=&quot;</span>, <span class="dv">2</span>);</a>
 <a class="sourceLine" id="cb11-14" title="14">            <span class="kw">if</span> (kv.<span class="fu">length</span> != <span class="dv">2</span>) {</a>
 <a class="sourceLine" id="cb11-15" title="15"></a>
 <a class="sourceLine" id="cb11-16" title="16">            }</a>

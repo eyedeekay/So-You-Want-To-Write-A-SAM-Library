@@ -243,7 +243,7 @@ sign and terminated by a newline.
     public Reply(String reply) {
         String trimmed = reply.trim();
         String[] replyvalues = reply.split(" ");
-        if (replyvalues.length <= 3) {
+        if (replyvalues.length < 2) {
             //omitted for brevity
         }
         topic = replyvalues[0];
@@ -252,7 +252,7 @@ sign and terminated by a newline.
 
         String[] replyLast = Arrays.copyOfRange(replyvalues, 3, replyvalues.length);
         for (int x = 0; x < replyLast.length; x++) {
-            String[] kv = replyLast[x].split("=");
+            String[] kv = replyLast[x].split("=", 2);
             if (kv.length != 2) {
 
             }

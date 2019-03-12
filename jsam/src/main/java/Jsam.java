@@ -83,23 +83,39 @@ public class Jsam extends Socket {
             id = generateID();
         }
         ID = id;
-        String cmd = "SESSION CREATE STYLE=STREAM ID=" + ID + " DESTINATION=" + destination;
+        System.out.println("Using ID " + ID);
+        String cmd = "SESSION CREATE STYLE=STREAM ID=" + ID + " DESTINATION=" + destination + " " + SignatureType();
         Reply repl = CommandSAM(cmd);
         if (repl.result == Reply.REPLY_TYPES.OK) {
             System.out.println(repl.String());
             return new String[] {id, repl.replyMap.get("DESTINATION")};
         }
         System.out.println(repl.String());
-        return new String[] {"", ""};
+        return new String[] {"", Reply.REPLY_TYPES.get(repl.result)};
     }
     public String ConnectSession(String destination) {
         return ConnectSession(ID, destination);
     }
     public String ConnectSession(String id, String destination) {
+        //HelloSAM();
         if (destination.endsWith(".i2p")) {
             destination = LookupName(destination);
         }
-        String cmd = "STREAM CONNECT ID=" + id + " DESTINATION=" + destination;
+        String cmd = "STREAM CONNECT ID=" + id + " DESTINATION=" + destination + " SILENT=false";
+        Reply repl = CommandSAM(cmd);
+        if (repl.result == Reply.REPLY_TYPES.OK) {
+            System.out.println(repl.String());
+            return id;
+        }
+        System.out.println(repl.String());
+        return "";
+    }
+    public String AcceptSession() {
+        return AcceptSession(ID);
+    }
+    public String AcceptSession(String id) {
+        //HelloSAM();
+        String cmd = "STREAM ACCEPT ID=" + id  + " SILENT=false";
         Reply repl = CommandSAM(cmd);
         if (repl.result == Reply.REPLY_TYPES.OK) {
             System.out.println(repl.String());

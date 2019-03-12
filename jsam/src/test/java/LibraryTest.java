@@ -8,31 +8,52 @@ import static org.junit.Assert.*;
 
 public class LibraryTest {
     @Test public void testHelloSAM() {
+        System.out.println("\n--- Testing HelloSAM");
         Jsam classUnderTest = new Jsam();
         assertTrue("HelloSAM should return 'true' in the presence of an alive SAM bridge", classUnderTest.HelloSAM());
     }
     @Test public void testCreateSession() {
+        System.out.println("\n--- Testing CreateSession");
         Jsam classUnderTest = new Jsam();
         classUnderTest.HelloSAM();
-        assertEquals("test", classUnderTest.CreateSession("test", "")[0]);
+        String id = "createsession";
+        assertEquals(id, classUnderTest.CreateSession(id, "")[0]);
     }
     @Test public void testLookupName() {
+        System.out.println("\n--- Testing LookupName");
         Jsam classUnderTest = new Jsam();
         classUnderTest.HelloSAM();
         assertEquals("8ZAW~KzGFMUEj0pdchy6GQOOZbuzbqpWtiApEj8LHy2~O~58XKxRrA43cA23a9oDpNZDqWhRWEtehSnX5NoCwJcXWWdO1ksKEUim6cQLP-VpQyuZTIIqwSADwgoe6ikxZG0NGvy5FijgxF4EW9zg39nhUNKRejYNHhOBZKIX38qYyXoB8XCVJybKg89aMMPsCT884F0CLBKbHeYhpYGmhE4YW~aV21c5pebivvxeJPWuTBAOmYxAIgJE3fFU-fucQn9YyGUFa8F3t-0Vco-9qVNSEWfgrdXOdKT6orr3sfssiKo3ybRWdTpxycZ6wB4qHWgTSU5A-gOA3ACTCMZBsASN3W5cz6GRZCspQ0HNu~R~nJ8V06Mmw~iVYOu5lDvipmG6-dJky6XRxCedczxMM1GWFoieQ8Ysfuxq-j8keEtaYmyUQme6TcviCEvQsxyVirr~dTC-F8aZ~y2AlG5IJz5KD02nO6TRkI2fgjHhv9OZ9nskh-I2jxAzFP6Is1kyAAAA", classUnderTest.LookupName("i2p-projekt.i2p"));
     }
     @Test public void testValidDefaultSAMAddress() {
+        System.out.println("\n--- Testing Default SAM Address");
         Jsam classUnderTest = new Jsam();
         assertEquals("127.0.0.1:7656", classUnderTest.SAMAddress());
     }
     @Test public void testValidDefaultSignatureType() {
+        System.out.println("\n--- Testing Default Signature Type");
         Jsam classUnderTest = new Jsam();
         assertEquals("SIGNATURE_TYPE=EdDSA_SHA512_Ed25519", classUnderTest.SignatureType());
     }
     @Test public void testConnectSession() {
+        System.out.println("\n--- Testing ConnectSession");
+        Jsam classUnderTest = new Jsam();
+        classUnderTest.HelloSAM();
+        String id = "connectsession";
+        assertEquals(id, classUnderTest.ConnectSession(classUnderTest.CreateSession(id, "")[0], "8ZAW~KzGFMUEj0pdchy6GQOOZbuzbqpWtiApEj8LHy2~O~58XKxRrA43cA23a9oDpNZDqWhRWEtehSnX5NoCwJcXWWdO1ksKEUim6cQLP-VpQyuZTIIqwSADwgoe6ikxZG0NGvy5FijgxF4EW9zg39nhUNKRejYNHhOBZKIX38qYyXoB8XCVJybKg89aMMPsCT884F0CLBKbHeYhpYGmhE4YW~aV21c5pebivvxeJPWuTBAOmYxAIgJE3fFU-fucQn9YyGUFa8F3t-0Vco-9qVNSEWfgrdXOdKT6orr3sfssiKo3ybRWdTpxycZ6wB4qHWgTSU5A-gOA3ACTCMZBsASN3W5cz6GRZCspQ0HNu~R~nJ8V06Mmw~iVYOu5lDvipmG6-dJky6XRxCedczxMM1GWFoieQ8Ysfuxq-j8keEtaYmyUQme6TcviCEvQsxyVirr~dTC-F8aZ~y2AlG5IJz5KD02nO6TRkI2fgjHhv9OZ9nskh-I2jxAzFP6Is1kyAAAA"));
+    }
+    /*@Test public void testConnectSession() {
+        System.out.println("\n--- Testing ConnectSession");
         Jsam classUnderTest = new Jsam();
         classUnderTest.HelloSAM();
         String id = classUnderTest.CreateSession("test-2", "")[0];
-        assertEquals("test-2", classUnderTest.ConnectSession(id, "8ZAW~KzGFMUEj0pdchy6GQOOZbuzbqpWtiApEj8LHy2~O~58XKxRrA43cA23a9oDpNZDqWhRWEtehSnX5NoCwJcXWWdO1ksKEUim6cQLP-VpQyuZTIIqwSADwgoe6ikxZG0NGvy5FijgxF4EW9zg39nhUNKRejYNHhOBZKIX38qYyXoB8XCVJybKg89aMMPsCT884F0CLBKbHeYhpYGmhE4YW~aV21c5pebivvxeJPWuTBAOmYxAIgJE3fFU-fucQn9YyGUFa8F3t-0Vco-9qVNSEWfgrdXOdKT6orr3sfssiKo3ybRWdTpxycZ6wB4qHWgTSU5A-gOA3ACTCMZBsASN3W5cz6GRZCspQ0HNu~R~nJ8V06Mmw~iVYOu5lDvipmG6-dJky6XRxCedczxMM1GWFoieQ8Ysfuxq-j8keEtaYmyUQme6TcviCEvQsxyVirr~dTC-F8aZ~y2AlG5IJz5KD02nO6TRkI2fgjHhv9OZ9nskh-I2jxAzFP6Is1kyAAAA"));
+        assertEquals(id, classUnderTest.ConnectSession(id, "i2p-projekt.i2p"));
+    }*/
+    @Test public void testAcceptSession() {
+        System.out.println("\n--- Testing AcceptSession");
+        Jsam classUnderTest = new Jsam();
+        classUnderTest.HelloSAM();
+        String id = "accepttsession";
+        assertEquals(id, classUnderTest.AcceptSession(classUnderTest.CreateSession(id, "")[0]));
     }
 }

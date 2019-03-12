@@ -43,7 +43,7 @@ public class Reply {
             case "RESULT=TIMEOUT":
                 return TIMEOUT;
             }
-            return CANT_REACH_PEER;
+            return UNSET;
         }
         public static String get(REPLY_TYPES type) {
             switch (type) {
@@ -66,16 +66,16 @@ public class Reply {
             case TIMEOUT:
                 return "RESULT=TIMEOUT";
             }
-            return "RESULT=CANT_REACH_PEER";
+            return "RESULT=UNSET";
         }
     };
     public Reply(String reply) {
         String trimmed = reply.trim();
         String[] replyvalues = reply.split(" ");
-        if (replyvalues.length <= 3) {
+        if (replyvalues.length < 2) {
             //TODO: handle malformed reply here
             //return
-            System.out.println("Malformed reply: " + reply);
+            System.out.println("Malformed reply: " + reply + replyvalues.length);
             return;
         }
         System.out.println("Forming reply: " + reply);
@@ -85,9 +85,9 @@ public class Reply {
 
         String[] replyLast = Arrays.copyOfRange(replyvalues, 3, replyvalues.length);
         for (int x = 0; x < replyLast.length; x++) {
-            String[] kv = replyLast[x].split("=");
+            String[] kv = replyLast[x].split("=", 2);
             if (kv.length != 2) {
-
+                break;
             }
             replyMap.put(kv[0], kv[1]);
         }
